@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import { configDotenv } from 'dotenv';
 
 import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
+import usersRouter from './routes/users/usersIndex.js';
 import { connectMongodb } from './utils/connectMongodb.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -39,8 +39,8 @@ app.use((req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT || 3000,() => {
-    console.log(`NodeJs Server started at : ${process.env.PORT || 3000}`)
+app.listen(process.env.PORT || 3200,() => {
+    console.log(`NodeJs Server started at : ${process.env.PORT || 3200}`)
 })
 
 export default app;
