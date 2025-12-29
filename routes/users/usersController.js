@@ -1,4 +1,6 @@
 import { usersModal } from "../../modals/usersModal/usersModal.js";
+import { userSessionModal } from "../../modals/usersSessionModal/usersSessionModal.js";
+import { createLoginToken } from "../../utils/jwtTokenService.js";
 
 const userRoles = ["admin", "user", "superadmin", "viewuser"];
 
@@ -87,10 +89,42 @@ export const loginUser = async (req, res, next) => {
         }
         
         if (await isValidUser.comparePassword(reqBody.password)) {
-            return res.status(200).json({
-                success: true,
-                message: `User login successfully`
-            })   
+            const token = await createLoginToken(isValidUser);
+
+            if (!token) {
+                return res.status(500).json({
+                    success: false,
+                    message: `Internal server error...`
+                })
+            }
+            // const addUserSession = new userSessionModal({
+            //     userId: isValidUser._id,
+            //     token
+            // })
+
+            // await addUserSession.save();
+
+            req.session.userId = isValidUser._id;
+            req.session.email = isValidUser.email;
+            req.session.token = token;
+            req.session.role = isValidUser.role;
+
+            req.session.save((err) => {
+                if (err) {
+                    console.log("At saving session", err);
+                    return res.status(500).json({
+                        success: false,
+                        message: `Internal server error...`
+                    })
+                }
+                res.cookie('token', token)
+                res.cookie('role', isValidUser.role);
+                return res.status(200).json({
+                    success: true,
+                    message: `User login successfully`
+                })
+            });
+   
         } else {
             return res.status(401).json({
                 success: false,

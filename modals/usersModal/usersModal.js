@@ -18,8 +18,8 @@ const usersSchema = mongoose.Schema({
         }
     },
     password: { type: String },
-    firstName: { type: String },
-    lastName: { type: String },
+    firstname: { type: String },
+    lastname: { type: String },
     role: { type: String, enum: userRoles, default: 'user' }
 }, {
     timestamps: true
@@ -55,4 +55,4 @@ usersSchema.methods.comparePassword = async function (userPassword) {
     }
 }
 
-export const usersModal = mongoose.model('users',usersSchema);
+export const usersModal = mongoose.model('user',usersSchema);
