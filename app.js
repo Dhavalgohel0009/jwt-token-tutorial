@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import 'dotenv/config';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import { specs,swaggerUi } from './swagger.js';
 
 import v1IndexRouter from './routes/v1/v1Index.js'
 import usersRouter from './routes/users/usersIndex.js';
@@ -41,6 +42,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session(cookieSession));
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs) )
 app.use('/v1', v1IndexRouter);
 app.use('/users', usersRouter);
 
